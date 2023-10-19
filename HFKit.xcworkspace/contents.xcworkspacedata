@@ -2,15 +2,15 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:HFNavigation">
-   </FileRef>
-   <FileRef
       location = "group:HFCoreUI">
    </FileRef>
    <FileRef
-      location = "group:HFCoreModule">
+      location = "group:HFCoreModel">
    </FileRef>
    <FileRef
       location = "group:HFAuth">
+   </FileRef>
+   <FileRef
+      location = "group:HFNavigation">
    </FileRef>
 </Workspace>

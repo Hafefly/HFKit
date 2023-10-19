@@ -12,11 +12,17 @@ let package = Package(
             name: "HFCoreUI",
             targets: ["HFCoreUI"]),
     ],
+    dependencies: [
+        .package(path: "../HFCoreModel")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "HFCoreUI"
+            name: "HFCoreUI",
+            dependencies: [
+                "HFCoreModel"
+            ]
         ),
         .testTarget(
             name: "HFCoreUITests",

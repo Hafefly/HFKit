@@ -1,7 +1,7 @@
 import XCTest
-@testable import HFCoreModule
+@testable import HFCoreModel
 
-final class HFCoreModuleTests: XCTestCase {
+final class HFCoreModelTests: XCTestCase {
     func testExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest

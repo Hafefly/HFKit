@@ -7,7 +7,6 @@
 
 import Foundation
 import FirebaseAuth
-import HFCoreModel
 
 protocol HFUser {
     init(user: User)
