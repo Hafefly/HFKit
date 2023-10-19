@@ -4,6 +4,14 @@
    <FileRef
       location = "group:Package.swift">
    </FileRef>
+   <Group
+      location = "container:"
+      name = "Sources">
+      <Group
+         location = "container:"
+         name = "HFKit">
+      </Group>
+   </Group>
    <FileRef
       location = "group:HFCoreUI">
    </FileRef>

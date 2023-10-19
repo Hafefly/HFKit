@@ -8,9 +8,7 @@ let package = Package(
     platforms: [.iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "HFKit",
-            targets: ["HFKit"]),
+        .library(name: "HFKit", targets: ["HFKit"]),
     ],
     dependencies: [
         .package(path: "HFAuth"),
@@ -21,8 +19,7 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "HFKit",
+        .target(name: "HFKit",
             dependencies: [
                 "HFAuth",
                 "HFCoreModel",
