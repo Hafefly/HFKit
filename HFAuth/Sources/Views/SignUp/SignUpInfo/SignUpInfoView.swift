@@ -7,6 +7,7 @@
 
 import SwiftUI
 import HFCoreUI
+import FirebaseAuth
 
 struct SignUpInfoView<T: HFUser>: View {
     @StateObject private var model = Model()
@@ -20,10 +21,10 @@ struct SignUpInfoView<T: HFUser>: View {
     
     @FocusState private var activeField: OTPField?
     
-    let succcess: (T, Bool) -> Void
+    let success: (T, Bool) -> Void
     
-    init(succcess: @escaping (T, Bool) -> Void) {
-        self.succcess = succcess
+    init(success: @escaping (T, Bool) -> Void) {
+        self.success = success
     }
 
     private var otp: String {
@@ -82,7 +83,7 @@ struct SignUpInfoView<T: HFUser>: View {
                             Text("phone number")
                                 .foregroundColor(.white.opacity(0.7))
                         }
-                        .textFieldStyle(HFTextFieldStyle(uiState: model.phoneNumberUiState))
+                        .textFieldStyle(HFTextFieldStyle(model.phoneNumberUiState))
                         .onChange(of: phonenumber) { newValue in
                             model.validatePhoneFormat(newValue)
                         }
@@ -123,7 +124,7 @@ struct SignUpInfoView<T: HFUser>: View {
             
             Spacer()
             Button {
-                model.checkInfo(firstname: firstname, lastname: lastname, province: province, phoneNumber: phonenumber, otpCode: otpCode)
+                model.checkInfo(firstname: firstname, lastname: lastname, province: province, phoneNumber: phonenumber, otpCode: otpCode, success: success)
             } label: {
                 Text("continue".localized)
                     .font(.white, .semiBold, 18)
@@ -181,7 +182,14 @@ struct SignUpInfoView<T: HFUser>: View {
 }
 
 struct SignUpInfoView_Previews: PreviewProvider {
+    struct UserMock: HFUser {
+        init(user: User) {
+            //
+        }
+    }
     static var previews: some View {
-        SignUpInfoView<Barber>()
+        SignUpInfoView<UserMock> { user, isNew in
+            //
+        }
     }
 }

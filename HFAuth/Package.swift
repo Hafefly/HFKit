@@ -13,7 +13,8 @@ let package = Package(
             targets: ["HFAuth"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.16.0")
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.16.0"),
+        .package(path: "../HFCoreUI")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -21,7 +22,8 @@ let package = Package(
         .target(
             name: "HFAuth",
             dependencies: [
-                .product(name: "FirebaseAuth", package: "firebase-ios-sdk")
+                .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+                "HFCoreUI"
             ]
         ),
         .testTarget(

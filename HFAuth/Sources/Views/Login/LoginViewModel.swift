@@ -37,7 +37,7 @@ extension LoginView {
         }
         
         func signup(success: @escaping (T, Bool) -> Void) {
-            NavigationCoordinator.pushScreen(SignUpInfoView(succcess: success))
+            NavigationCoordinator.pushScreen(SignUpInfoView(success: success))
         }
     }
 }
