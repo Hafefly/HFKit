@@ -13,10 +13,10 @@ let package = Package(
             targets: ["HFKit"]),
     ],
     dependencies: [
-        .package(path: "HFAuth"),
-        .package(path: "HFCoreModel"),
-        .package(path: "HFCoreUI"),
-        .package(path: "HFNavigation")
+        .package(path: "./HFAuth"),
+        .package(path: "./HFCoreModel"),
+        .package(path: "./HFCoreUI"),
+        .package(path: "./HFNavigation")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
