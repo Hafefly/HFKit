@@ -5,6 +5,8 @@
 //  Created by Samy Mehdid on 18/10/2023.
 //
 
+#if canImport(UIKit)
+
 import UIKit
 
 extension UIApplication {
@@ -20,3 +22,5 @@ extension UIApplication {
         shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
+
+#endif

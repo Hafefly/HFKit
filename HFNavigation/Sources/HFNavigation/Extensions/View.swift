@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 10.15, *)
 public extension View {
     func popBack(count: Int = 1, home: Bool = false) {
         NavigationCoordinator.popBack(count: count, home: home)
