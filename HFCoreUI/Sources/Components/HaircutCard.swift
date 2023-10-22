@@ -8,17 +8,17 @@
 import SwiftUI
 import HFCoreModel
 
-struct HaircutCard: View {
+public struct HaircutCard: View {
     
     private let order: Order
     
     @State private var expanded: Bool = false
     
-    init(order: Order) {
+    public init(order: Order) {
         self.order = order
     }
     
-    var body: some View {
+    public var body: some View {
         VStack{
             VStack(alignment: .leading, spacing: 12){
                 HStack{

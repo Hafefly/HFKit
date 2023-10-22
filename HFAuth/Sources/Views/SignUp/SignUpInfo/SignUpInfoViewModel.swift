@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import FirebaseAuth
 import HFNavigation
 import HFCoreUI
 
@@ -75,7 +76,7 @@ extension SignUpInfoView {
             return result
         }
         
-        func checkInfo(firstname: String, lastname: String, province: Province, phoneNumber: String, otpCode: String, success: @escaping (T, Bool) -> Void) {
+        func checkInfo(firstname: String, lastname: String, province: Province, phoneNumber: String, otpCode: String, success: @escaping (User, Bool) -> Void) {
             if validateName(firstname),
                validateName(lastname),
                verifyOtp(for: phoneNumber, code: otpCode) {

@@ -7,8 +7,9 @@
 
 import SwiftUI
 import HFCoreUI
+import FirebaseAuth
 
-struct SignUpView<T: HFUser>: View {
+struct SignUpView: View {
     
     let firstname: String
     let lastname: String
@@ -21,13 +22,14 @@ struct SignUpView<T: HFUser>: View {
     @State private var password: String = ""
     @State private var rePassword: String = ""
     
-    let success: (T, Bool) -> Void
+    let success: (User, Bool) -> Void
     
-    init(firstname: String, lastname: String, province: Province, phonenumber: String, success: @escaping (T, Bool) -> Void) {
+    init(firstname: String, lastname: String, province: Province, phonenumber: String, success: @escaping (User, Bool) -> Void) {
         self.firstname = firstname
         self.lastname = lastname
         self.province = province
         self.phonenumber = phonenumber
+        
         self.success = success
     }
     

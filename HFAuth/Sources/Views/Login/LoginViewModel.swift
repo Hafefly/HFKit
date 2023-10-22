@@ -8,6 +8,7 @@
 import Foundation
 import HFNavigation
 import HFCoreUI
+import FirebaseAuth
 
 extension LoginView {
     class Model: ObservableObject {
@@ -15,9 +16,10 @@ extension LoginView {
         @Published public var emailUiState: UiState<String> = .idle
         @Published public var passwordUiState: UiState<String> = .idle
         
-        func login(email: String, password: String, success: @escaping (T, Bool) -> Void) {
+        func login(email: String, password: String, success: @escaping (User, Bool) -> Void) {
             Task {
                 do {
+                    
                     success(try await FirebaseAuth.shared.signIn(email: email, password: password), false)
                 } catch {
                     self.emailUiState = .failed(error.localizedDescription)
@@ -36,7 +38,7 @@ extension LoginView {
             }
         }
         
-        func signup(success: @escaping (T, Bool) -> Void) {
+        func signup(success: @escaping (User, Bool) -> Void) {
             NavigationCoordinator.pushScreen(SignUpInfoView(success: success))
         }
     }

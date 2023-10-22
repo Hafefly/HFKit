@@ -9,7 +9,7 @@ import SwiftUI
 import HFCoreUI
 import FirebaseAuth
 
-struct SignUpInfoView<T: HFUser>: View {
+struct SignUpInfoView: View {
     @StateObject private var model = Model()
     
     @State private var firstname: String = ""
@@ -21,9 +21,9 @@ struct SignUpInfoView<T: HFUser>: View {
     
     @FocusState private var activeField: OTPField?
     
-    let success: (T, Bool) -> Void
+    let success: (User, Bool) -> Void
     
-    init(success: @escaping (T, Bool) -> Void) {
+    init(success: @escaping (User, Bool) -> Void) {
         self.success = success
     }
 
@@ -182,13 +182,8 @@ struct SignUpInfoView<T: HFUser>: View {
 }
 
 struct SignUpInfoView_Previews: PreviewProvider {
-    struct UserMock: HFUser {
-        init(user: User) {
-            //
-        }
-    }
     static var previews: some View {
-        SignUpInfoView<UserMock> { user, isNew in
+        SignUpInfoView { user, isNew in
             //
         }
     }

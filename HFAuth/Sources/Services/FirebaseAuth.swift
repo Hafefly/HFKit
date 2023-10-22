@@ -8,8 +8,8 @@
 import Foundation
 import FirebaseAuth
 
-final class FirebaseAuth {
-    static let shared = FirebaseAuth()
+final public class FirebaseAuth {
+    static public let shared = FirebaseAuth()
     
     private init() { }
     
@@ -17,26 +17,24 @@ final class FirebaseAuth {
         return Auth.auth().currentUser?.uid
     }
     
-    public func getUser<T: HFUser>() throws -> T {
+    public func getUser() throws -> User {
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badURL)
         }
         
-        return T(user: user)
+        return user
     }
     
     @discardableResult
-    public func signIn<T: HFUser>(email: String, password: String) async throws -> T {
-        let authResult = try await Auth.auth().signIn(withEmail: email, password: password)
+    public func signIn(email: String, password: String) async throws -> User {
         
-        return T(user: authResult.user)
+        return try await Auth.auth().signIn(withEmail: email, password: password).user
     }
     
     @discardableResult
-    public func createUser<T: HFUser>(email: String, password: String) async throws -> T {
-        let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+    public func createUser(email: String, password: String) async throws -> User {
         
-        return T(user: authResult.user)
+        return try await Auth.auth().createUser(withEmail: email, password: password).user
     }
     
     public func resetPassword(email: String) async throws {

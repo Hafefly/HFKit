@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct ViewLayout<Header: View, Content: View>: View {
+public struct ViewLayout<Header: View, Content: View>: View {
     private var header: Header
     private let content: (EdgeInsets) -> Content
     
-    init(@ViewBuilder header: () -> Header, @ViewBuilder content: @escaping (EdgeInsets) -> Content) {
+    public init(@ViewBuilder header: () -> Header, @ViewBuilder content: @escaping (EdgeInsets) -> Content) {
         self.header = header()
         self.content = content
     }
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { proxy in
             VStack(alignment: .center, spacing: 0) {
                 header
@@ -33,12 +33,16 @@ struct ViewLayout<Header: View, Content: View>: View {
     }
 }
 
-struct HeaderView: View {
-    static let headerHeight: CGFloat = 50
+public struct HeaderView: View {
+    static private let headerHeight: CGFloat = 50
     
-    let title: String
+    private let title: String
     
-    var body: some View {
+    public init(title: String) {
+        self.title = title
+    }
+    
+    public var body: some View {
         HStack{
             Spacer()
             Text(title)

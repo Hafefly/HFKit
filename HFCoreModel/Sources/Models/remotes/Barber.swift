@@ -11,30 +11,28 @@ import FirebaseFirestoreSwift
 public struct Barber: CodeIdentifiable {
     
     @DocumentID public var id: String?
-    var barbershopUID: String?
-    var barbershopName: String?
-    var profileImage: String?
-    var firstname: String
-    var lastname: String
-    var email: String
-    var bio: String?
-    var age: UInt?
-    var experience: UInt
-    var haircutsDone: UInt
-    var instagram: String?
-    var isAvailableToHome: Bool
-    var phoneNumber: String?
-    var province: String?
-    var rating: Double?
-    var verified: Bool
-    var workingHours: WorkingHours?
+    public var barbershopUID: String?
+    public var barbershopName: String?
+    public var profileImage: String?
+    public var fullname: String
+    public var email: String
+    public var bio: String?
+    public var age: UInt?
+    public var experience: UInt
+    public var haircutsDone: UInt
+    public var instagram: String?
+    public var isAvailableToHome: Bool
+    public var phoneNumber: String?
+    public var province: String?
+    public var rating: Double?
+    public var verified: Bool
+    public var workingHours: WorkingHours?
     
     public init(
         barbershopUID: String? = nil,
         barbershopName: String? = nil,
         profileImage: String? = nil,
-        firstname: String,
-        lastname: String,
+        fullname: String,
         email: String,
         bio: String? = nil,
         age: UInt? = nil,
@@ -50,8 +48,7 @@ public struct Barber: CodeIdentifiable {
             self.barbershopUID = barbershopUID
             self.barbershopName = barbershopName
             self.profileImage = profileImage
-            self.firstname = firstname
-            self.lastname = lastname
+            self.fullname = fullname
             self.email = email
             self.bio = bio
             self.age = age

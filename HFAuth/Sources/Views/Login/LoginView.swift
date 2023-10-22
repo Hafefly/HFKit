@@ -9,20 +9,20 @@ import SwiftUI
 import HFCoreUI
 import FirebaseAuth
 
-struct LoginView<T: HFUser>: View {
+public struct LoginView: View {
     
     @StateObject private var model = Model()
     
     @State private var email: String = ""
     @State private var password: String = ""
     
-    let success: (T, Bool) -> Void
+    let success: (User, Bool) -> Void
     
-    init(success: @escaping (T, Bool) -> Void) {
+    public init(success: @escaping (User, Bool) -> Void) {
         self.success = success
     }
     
-    var body: some View {
+    public var body: some View {
         VStack(spacing: 32){
             Spacer()
             Image("logo_hafefly_white")
@@ -107,14 +107,9 @@ struct LoginView<T: HFUser>: View {
 }
 
 struct LoginView_Previews: PreviewProvider {
-    struct PreviewStruct: HFUser {
-        init(user: User) {
-            //
-        }
-    }
     static var previews: some View {
         
-        LoginView<PreviewStruct> { user, isNew in
+        LoginView { user, isNew in
             //
         }
     }

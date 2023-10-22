@@ -33,7 +33,7 @@ public struct Order: CodeIdentifiable {
     
     public var totalPrice: UInt
     
-    var intervals: [OrderInterval]?
+    public var intervals: [OrderInterval]?
     public var confirmedInterval: OrderInterval?
     
     public init(userId: String, barberId: String, fade: UInt?, beard: UInt?, hairdryer: UInt?, razor: UInt?, scissors: UInt?, straightener: UInt?, atHome: UInt?, totalPrice: UInt, intervals: [OrderInterval]? = nil, confirmedInterval: OrderInterval? = nil) {
@@ -51,7 +51,7 @@ public struct Order: CodeIdentifiable {
         self.confirmedInterval = confirmedInterval
     }
     
-    static let mockOrders = [
+    public static let mockOrders = [
         Order(userId: "", barberId: "", fade: 150, beard: 100, hairdryer: nil, razor: nil, scissors: 50, straightener: nil, atHome: 150, totalPrice: 450, confirmedInterval: OrderInterval(from: Timestamp(), to: Timestamp())),
         Order(userId: "", barberId: "", fade: 150, beard: 100, hairdryer: nil, razor: nil, scissors: 50, straightener: nil, atHome: 150, totalPrice: 450, confirmedInterval: OrderInterval(from: Timestamp(), to: Timestamp())),
         Order(userId: "", barberId: "", fade: 150, beard: 100, hairdryer: nil, razor: nil, scissors: 50, straightener: nil, atHome: 150, totalPrice: 450, confirmedInterval: OrderInterval(from: Timestamp(), to: Timestamp())),

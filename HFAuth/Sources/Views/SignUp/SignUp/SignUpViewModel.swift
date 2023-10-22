@@ -8,6 +8,7 @@
 import Foundation
 import HFNavigation
 import HFCoreUI
+import FirebaseAuth
 
 extension SignUpView {
     class Model: ObservableObject {
@@ -16,26 +17,20 @@ extension SignUpView {
         @Published public private(set) var passwordUiState: UiState<String> = .idle
         @Published public private(set) var rePasswordUiState: UiState<String> = .idle
         
-        func signUp(firstname: String, lastname: String, province: Province, phonenumber: String, email: String, password: String, success: @escaping (T, Bool) -> Void) {
+        func signUp(firstname: String, lastname: String, province: Province, phonenumber: String, email: String, password: String, success: @escaping (User, Bool) -> Void) {
             
             DispatchQueue.main.async {
                 Task {
                     do {
-                        success(try await FirebaseAuth.shared.createUser(email: email, password: password), true)
+                        var user = try await FirebaseAuth.shared.createUser(email: email, password: password) as User
                         
-//                        barber.firstname = firstname
-//                        barber.lastname = lastname
-//                        barber.email = email
-//                        barber.experience = 0
-//                        barber.haircutsDone = 0
-//                        barber.isAvailableToHome = true
-//                        barber.phoneNumber = phonenumber
-//                        barber.province = province.rawValue
-//                        barber.verified = false
-//                        
-//                        try BarberRepo.shared.createBarber(barber)
-//                        
-//                        NavigationCoordinator.shared.switchStartPoint(MainView(tab: .home))
+                        var userChangeInstance: UserProfileChangeRequest = user.createProfileChangeRequest()
+                        
+                        userChangeInstance.displayName = firstname + " " + lastname
+                        
+                        try await userChangeInstance.commitChanges()
+                        
+                        success(user, true)
                         
                     } catch {
                         self.emailUiState = .failed(error.localizedDescription)
@@ -88,7 +83,7 @@ extension SignUpView {
             }
         }
         
-        func validateEnteries(firstname: String, lastname: String, province: Province, phoneNumber: String, email: String, password: String, rePassword: String, success: @escaping (T, Bool) -> Void) {
+        func validateEnteries(firstname: String, lastname: String, province: Province, phoneNumber: String, email: String, password: String, rePassword: String, success: @escaping (User, Bool) -> Void) {
             if validateEmail(email),
                validatePassword(password),
                passwordsCheck(password: password, rePassword: rePassword) {
