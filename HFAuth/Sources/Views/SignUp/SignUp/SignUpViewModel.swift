@@ -17,6 +17,13 @@ extension SignUpView {
         @Published public private(set) var passwordUiState: UiState<String> = .idle
         @Published public private(set) var rePasswordUiState: UiState<String> = .idle
         
+        public var buttonDisabled: Bool {
+            if case .success = emailUiState, case .success = passwordUiState, case .success = rePasswordUiState {
+                return false
+            }
+            return true
+        }
+        
         func signUp(firstname: String, lastname: String, province: Province, phonenumber: String, email: String, password: String, success: @escaping (User, Bool) -> Void) {
             
             DispatchQueue.main.async {

@@ -92,7 +92,7 @@ public struct LoginView: View {
                 Text("Sign in")
                     .font(.white, .bold, 20)
             }
-            .buttonStyle(HFButtonStyle())
+            .buttonStyle(HFButtonStyle(disabled: model.buttonDisabled))
         }
         .padding(16)
         .background(

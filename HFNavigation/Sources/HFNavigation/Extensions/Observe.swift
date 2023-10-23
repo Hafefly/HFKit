@@ -17,7 +17,7 @@ import SwiftUI
 
     public var wrappedValue: Type {
         get { return value }
-        set { value = newValue }
+        set { DispatchQueue.main.async { self.value = newValue } }
     }
 
     public var projectedValue: ObservedConsumer<Type> {

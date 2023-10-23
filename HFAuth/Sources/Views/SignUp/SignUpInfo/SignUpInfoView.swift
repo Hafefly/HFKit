@@ -129,7 +129,7 @@ struct SignUpInfoView: View {
                 Text("continue".localized)
                     .font(.white, .semiBold, 18)
             }
-            .buttonStyle(HFButtonStyle())
+            .buttonStyle(HFButtonStyle(disabled: model.buttonDisabled))
         }
         .padding(16)
         .background(

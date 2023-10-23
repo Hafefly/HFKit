@@ -58,7 +58,7 @@ struct SignUpView: View {
             Button("Sign up") {
                 model.signUp(firstname: firstname, lastname: lastname, province: province, phonenumber: phonenumber, email: email, password: password, success: success)
             }
-            .buttonStyle(HFButtonStyle())
+            .buttonStyle(HFButtonStyle(disabled: model.buttonDisabled))
         }
         .padding(16)
         .background(

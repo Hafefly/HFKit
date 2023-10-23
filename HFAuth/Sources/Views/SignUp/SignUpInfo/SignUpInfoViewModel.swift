@@ -18,6 +18,14 @@ extension SignUpInfoView {
         @Published public private(set) var lastnameUiState: UiState<String> = .idle
         @Published public private(set) var phoneNumberUiState: UiState<String> = .idle
         
+        public var buttonDisabled: Bool {
+            if case .success = firstnameUiState, case .success = lastnameUiState, case .success = phoneNumberUiState {
+                return false
+            }
+            
+            return true
+        }
+        
         @Published public private(set) var otpFieldOpacity = 0
         @Published public private(set) var timeCounting = 60000
         @Published public private(set) var otpButtonText = "send otp"

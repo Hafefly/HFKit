@@ -16,6 +16,14 @@ extension LoginView {
         @Published public var emailUiState: UiState<String> = .idle
         @Published public var passwordUiState: UiState<String> = .idle
         
+        public var buttonDisabled: Bool {
+            if case .success = emailUiState, case .success = passwordUiState {
+                return false
+            }
+            
+            return true
+        }
+        
         func login(email: String, password: String, success: @escaping (User, Bool) -> Void) {
             Task {
                 do {

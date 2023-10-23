@@ -9,7 +9,11 @@ import SwiftUI
 
 public struct HFButtonStyle: ButtonStyle {
     
-    public init() { }
+    @State var disabled: Bool
+    
+    public init(disabled: Bool) {
+        self.disabled = disabled
+    }
     
     public func makeBody(configuration: Configuration) -> some View {
         HStack{
@@ -18,7 +22,7 @@ public struct HFButtonStyle: ButtonStyle {
             Spacer()
         }
         .padding(.vertical, 12)
-        .background(Color("HFOrange"))
+        .background(disabled ? Color.gray : Color.hfOrange)
         .cornerRadius(12)
     }
 }
