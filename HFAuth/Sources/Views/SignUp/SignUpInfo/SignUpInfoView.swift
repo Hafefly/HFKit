@@ -15,20 +15,13 @@ struct SignUpInfoView: View {
     @State private var firstname: String = ""
     @State private var lastname: String = ""
     @State private var phonenumber: String = ""
-    @State private var otpCode: String = ""
     
     @State private var province: Province = .Algiers
-    
-    @FocusState private var activeField: OTPField?
     
     let success: (User, Bool) -> Void
     
     init(success: @escaping (User, Bool) -> Void) {
         self.success = success
-    }
-
-    private var otp: String {
-        return model.otpFields.joined()
     }
     
     var body: some View {
@@ -47,18 +40,14 @@ struct SignUpInfoView: View {
                                 .foregroundColor(.white.opacity(0.7))
                         }
                         .textFieldStyle(HFTextFieldStyle(model.firstnameUiState))
-                        .onChange(of: lastname) { newValue in
-                            model.setFirstnameUiState(model.validateName(newValue))
-                        }
+                        .onChange(of: firstname, perform: model.setFirstnameUiState)
                     TextField("lastname".localized, text: $lastname)
                         .placeholder(when: lastname.isEmpty) {
                             Text("lastname")
                                 .foregroundColor(.white.opacity(0.7))
                         }
                         .textFieldStyle(HFTextFieldStyle(model.lastnameUiState))
-                        .onChange(of: lastname) { newValue in
-                            model.setLastnameUiState(model.validateName(newValue))
-                        }
+                        .onChange(of: lastname, perform: model.setLastnameUiState)
                 }
                 
                 Picker("province".localized, selection: $province) {
@@ -84,52 +73,33 @@ struct SignUpInfoView: View {
                                 .foregroundColor(.white.opacity(0.7))
                         }
                         .textFieldStyle(HFTextFieldStyle(model.phoneNumberUiState))
-                        .onChange(of: phonenumber) { newValue in
-                            model.validatePhoneFormat(newValue)
-                        }
+                        .onChange(of: phonenumber, perform: model.validatePhoneFormat)
                     
                     Button {
-                        model.sendOtp(phonenumber: phonenumber)
+                        model.sendOtp(phonenumber)
                     } label: {
-                        Text(model.otpButtonText)
+                        Text(model.otpButtonUiState.text)
                             .font(.white, .regular, 16)
                     }
-                    .frame(width: 100, height: 56)
-                    .background(model.otpButtonDisabledd() ? Color.primaryColor : Color.hfOrange)
-                    .cornerRadius(12)
+                    .frame(width: 100)
+                    .buttonStyle(HFButtonStyle(disabled: model.otpButtonUiState.disabled))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white, lineWidth: 3)
+                            .stroke(model.otpButtonUiState == .success ? Color.green : Color.white, lineWidth: 3)
                     )
-                    .disabled(model.otpButtonDisabledd())
                 }
             }
             
-            OTPField()
-                .onChange(of: model.otpFields) { newValue in
-                    if model.handleAutoFill(value: newValue, codeLength: 6) {
-                        activeField = nil
-                    } else {
-                        model.updateActiveField(value: newValue, codeLength: 6, activeField: activeField) { newActiveField in
-                            activeField = newActiveField
-                        }
-                        if newValue.joined().count == 6 {
-                            for item in newValue {
-                                if item.count == 0 { return }
-                            }
-                            activeField = nil
-                        }
-                    }
-                }
+            OTPFieldView(phonenumber, success: model.otpSuccess, fail: model.otpFail)
             
             Spacer()
             Button {
-                model.checkInfo(firstname: firstname, lastname: lastname, province: province, phoneNumber: phonenumber, otpCode: otpCode, success: success)
+                model.continueSignUp(firstname: firstname, lastname: lastname, province: province, phoneNumber: phonenumber, success: success)
             } label: {
                 Text("continue".localized)
                     .font(.white, .semiBold, 18)
             }
-            .buttonStyle(HFButtonStyle(disabled: model.buttonDisabled))
+            .buttonStyle(HFButtonStyle(disabled: model.continueButtonDisabled))
         }
         .padding(16)
         .background(
@@ -141,43 +111,6 @@ struct SignUpInfoView: View {
             .ImagePattern()
         )
         .onTapGesture(perform: UIApplication.endEditing)
-    }
-    
-    @ViewBuilder
-    func OTPField() -> some View {
-        VStack{
-            HStack{
-                ForEach(0 ..< 6, id: \.hashValue) { index in
-                    ZStack{
-                        TextField("", text: $model.otpFields[index])
-                            .keyboardType(.numberPad)
-                            .textContentType(.oneTimeCode)
-                            .multilineTextAlignment(.center)
-                            .focused($activeField, equals: model.activeStateForIndex(index: index))
-                    }
-                    .background(
-                        ZStack(alignment: .bottom) {
-                            Rectangle()
-                                .frame(width: 44, height: 62)
-                                .foregroundColor(.hfOrange.opacity(0.5))
-                            
-                            Rectangle()
-                                .frame(width: 44, height: 5)
-                                .foregroundColor(.white)
-                        }
-                            .cornerRadius(6))
-                }
-            }
-            HStack{
-                Text("daily_send_code".localized)
-                    .font(.white, .regular, 14)
-                Text("00:\(model.timeCounting / 1000)")
-                    .font(.white, .bold, 14)
-            }
-            .onReceive(model.timer){ timer in
-                model.timerCountdown(timer: timer)
-            }
-        }
     }
 }
 

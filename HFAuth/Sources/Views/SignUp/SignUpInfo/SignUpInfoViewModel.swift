@@ -6,10 +6,45 @@
 //
 
 import Foundation
+import SwiftUI
 import Combine
 import FirebaseAuth
 import HFNavigation
 import HFCoreUI
+
+enum OTPButtonUiState: Equatable {
+    case disabled(Int)
+    case valid(Int)
+    case success
+    
+    var backgroundColor: Color {
+        switch self {
+        case .disabled:
+            return .gray
+        case .valid:
+            return .hfOrange
+        case .success:
+            return .green
+        }
+    }
+    
+    var text: String {
+        switch self {
+        case .disabled(let count), .valid(let count):
+            return count > 0 ? "resend otp" : "send otp"
+        case .success:
+            return "done"
+        }
+    }
+    
+    var disabled: Bool {
+        if case .valid = self {
+            return false
+        }
+        
+        return true
+    }
+}
 
 extension SignUpInfoView {
     class Model: ObservableObject {
@@ -17,141 +52,82 @@ extension SignUpInfoView {
         @Published public private(set) var firstnameUiState: UiState<String> = .idle
         @Published public private(set) var lastnameUiState: UiState<String> = .idle
         @Published public private(set) var phoneNumberUiState: UiState<String> = .idle
+        @Published public private(set) var otpButtonUiState: OTPButtonUiState = .disabled(0)
+        @Published public private(set) var otpFieldUiState: OTPFieldUiState = .hidden
         
-        public var buttonDisabled: Bool {
-            if case .success = firstnameUiState, case .success = lastnameUiState, case .success = phoneNumberUiState {
+        @Published public private(set) var otpButtonCount = 0
+        
+        var continueButtonDisabled: Bool {
+            if case .success = firstnameUiState,
+               case .success = lastnameUiState,
+               case .success = phoneNumberUiState,
+               case .success = otpButtonUiState {
                 return false
             }
             
             return true
         }
         
-        @Published public private(set) var otpFieldOpacity = 0
-        @Published public private(set) var timeCounting = 60000
-        @Published public private(set) var otpButtonText = "send otp"
-        
-        @Published public private(set) var otpButtonDisabled = true
-        @Published public private(set) var continueButtonDisabled = true
-        
-        let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-        @Published public var otpFields: [String] = Array(repeating: "", count: 6)
-        
-        func sendOtp(phonenumber: String) {
-            self.otpButtonDisabled = true
-            #warning("send otp here")
+        func otpFail() {
+            self.setOtpFieldUiState(.hidden)
+            self.setOtpButtonUiState(.valid(otpButtonCount))
         }
         
-        func verifyOtp(for phonenumber: String, code otpCode: String) -> Bool {
-            #warning("verify otp here")
-            
-            return validatePhoneFormat(phonenumber)
+        func otpSuccess() {
+            self.setOtpFieldUiState(.hidden)
+            self.setOtpButtonUiState(.success)
         }
         
-        @discardableResult
-        func validateName(_ name: String) -> Bool {
-            let nameRegex = "^[A-Za-z]+([ '-][A-Za-z]+)*$"
-            
-            return name.regexChecker(with: nameRegex)
+        func setOtpButtonUiState(_ state: OTPButtonUiState) {
+            self.otpButtonUiState = state
         }
         
-        func setFirstnameUiState(_ success: Bool) {
-            if success {
-                self.firstnameUiState = .success("name in correct format")
-            } else {
-                self.firstnameUiState = .failed("name format is wrong")
-            }
+        func setOtpFieldUiState(_ state: OTPFieldUiState) {
+            self.otpFieldUiState = state
         }
         
-        func setLastnameUiState(_ success: Bool) {
-            if success {
-                self.lastnameUiState = .success("name in correct format")
-            } else {
-                self.lastnameUiState = .failed("name format is wrong")
-            }
-        }
-        
-        @discardableResult
-        func validatePhoneFormat(_ number: String) -> Bool {
-            let phoneRegex = #"^\d{10}$"#
-            
-            let result = number.regexChecker(with: phoneRegex)
-            if result {
-                self.phoneNumberUiState = .success("phone in correct format")
+        func sendOtp(_ phonenumber: String) {
+            if case .valid = otpButtonUiState {
+                self.otpButtonCount += 1
+                self.setOtpButtonUiState(.disabled(otpButtonCount))
+                self.otpFieldUiState = .displayed
+                #warning("send otp here")
+                
             } else {
                 self.phoneNumberUiState = .failed("phone should contain 10 characters")
+                return
             }
-            
-            return result
         }
         
-        func checkInfo(firstname: String, lastname: String, province: Province, phoneNumber: String, otpCode: String, success: @escaping (User, Bool) -> Void) {
-            if validateName(firstname),
-               validateName(lastname),
-               verifyOtp(for: phoneNumber, code: otpCode) {
+        func setFirstnameUiState(_ name: String) {
+            if name.regexChecker(with: .name) {
+                self.firstnameUiState = .success("firstname is correct")
+            } else {
+                self.firstnameUiState = .failed("firstname format is wrong")
+            }
+        }
+        
+        func setLastnameUiState(_ name: String) {
+            if name.regexChecker(with: .name) {
+                self.lastnameUiState = .success("lastname in correct format")
+            } else {
+                self.lastnameUiState = .failed("lastname format is wrong")
+            }
+        }
+        
+        func validatePhoneFormat(_ number: String) {
+            if number.regexChecker(with: .phone) {
+                self.phoneNumberUiState = .success("phone in correct format")
+                self.otpButtonUiState = .valid(0)
+            } else {
+                self.phoneNumberUiState = .failed("phone should contain 10 characters")
+                self.otpButtonUiState = .disabled(0)
+            }
+        }
+        
+        func continueSignUp(firstname: String, lastname: String, province: Province, phoneNumber: String, success: @escaping (User, Bool) -> Void) {
+            if !continueButtonDisabled {
                 NavigationCoordinator.pushScreen(SignUpView(firstname: firstname, lastname: lastname, province: province, phonenumber: phoneNumber, success: success))
-            }
-        }
-        
-        func updateActiveField(value: [String], codeLength: Int, activeField: OTPField?, nextActiveField: @escaping (OTPField?) -> Void) {
-            for index in 1 ... (codeLength - 1){
-                if value[index].isEmpty && !value[index - 1].isEmpty {
-                    nextActiveField(activeStateForIndex(index: index - 1))
-                }
-            }
-            
-            for index in 0 ..< (codeLength - 1){
-                if value[index].count == 1 && activeStateForIndex(index: index) == activeField {
-                    nextActiveField(activeStateForIndex(index: index + 1))
-                }
-            }
-            for index in 0 ..< codeLength {
-                if value[index].count > 1 {
-                    otpFields[index] = String(value[index].last!)
-                }
-            }
-        }
-        
-        func activeStateForIndex(index: Int) -> OTPField {
-            switch index {
-            case 0: return .field1
-            case 1: return .field2
-            case 2: return .field3
-            case 3: return .field4
-            case 4: return .field5
-            default: return .field6
-            }
-        }
-        
-        func handleAutoFill(value: [String], codeLength: Int) -> Bool {
-            for item in value {
-                if item.count == codeLength {
-                    for i in 0...(codeLength - 1) {
-                        otpFields[i] = String(Array(item)[i])
-                    }
-                    return true
-                }
-            }
-            if otpFields.joined().count == codeLength { return true }
-            return false
-        }
-        
-        func timerCountdown(timer: Publishers.Autoconnect<Timer.TimerPublisher>.Output) {
-            if timeCounting > 0 {
-                timeCounting -= 1000
-            } else if timeCounting == 0 {
-                self.timeCounting = 60000
-            }
-        }
-        
-        private func showOtpFields() {
-            self.otpFieldOpacity = 1
-        }
-        
-        func otpButtonDisabledd() -> Bool {
-            switch phoneNumberUiState {
-            case .success:
-                return timeCounting == 60000
-            default: return false
             }
         }
     }

@@ -101,7 +101,9 @@ public class NavigationCoordinator {
     }
     
     private func makeTransition(_ transition:() -> Void, withAnimation animation: TransitAnimation?) {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        DispatchQueue.main.async {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
         let currentAnimation = animation ?? .opacity
         switch currentAnimation {
         case .none: transition()

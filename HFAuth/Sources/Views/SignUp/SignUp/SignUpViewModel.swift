@@ -50,10 +50,7 @@ extension SignUpView {
         
         @discardableResult
         func validateEmail(_ email: String) -> Bool {
-            let emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-            
-            
-            let result = email.regexChecker(with: emailRegex)
+            let result = email.regexChecker(with: .email)
             if result {
                 self.emailUiState = .success("email in correct format")
             } else {
@@ -65,10 +62,8 @@ extension SignUpView {
         
         @discardableResult
         func validatePassword(_ password: String) -> Bool {
-            let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
             
-            
-            let result = password.regexChecker(with: passwordRegex)
+            let result = password.regexChecker(with: .password)
             if result {
                 self.passwordUiState = .success("password in correct format")
             } else {

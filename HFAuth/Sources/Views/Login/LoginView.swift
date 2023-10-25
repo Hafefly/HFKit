@@ -37,8 +37,10 @@ public struct LoginView: View {
                             .foregroundColor(.white.opacity(0.7))
                     }
                     .textFieldStyle(HFTextFieldStyle(model.emailUiState))
+                    .onChange(of: email, perform: model.checkEmail)
                 SecureField("password", text: $password)
                     .textFieldStyle(HFTextFieldStyle(model.passwordUiState))
+                    .onChange(of: password, perform: model.checkPassword)
                 HStack{
                     Button {
                         model.resetPassword(email: email)
@@ -93,6 +95,9 @@ public struct LoginView: View {
                     .font(.white, .bold, 20)
             }
             .buttonStyle(HFButtonStyle(disabled: model.buttonDisabled))
+            .onChange(of: model.buttonDisabled) { newValue in
+                debugPrint(newValue)
+            }
         }
         .padding(16)
         .background(

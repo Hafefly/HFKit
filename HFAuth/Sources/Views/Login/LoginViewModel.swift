@@ -24,6 +24,27 @@ extension LoginView {
             return true
         }
         
+        func checkEmail(_ email: String) {
+            self.emailUiState = .loading
+            if email.regexChecker(with: .email) {
+                self.emailUiState = .success("email is valide")
+                return
+            }
+            
+            self.emailUiState = .failed("email is not valide")
+        }
+        
+        func checkPassword(_ password: String) {
+            self.passwordUiState = .loading
+            
+            if password.regexChecker(with: .password) {
+                self.passwordUiState = .success("password is valid")
+                return
+            }
+            
+            self.emailUiState = .failed("password is not valid")
+        }
+        
         func login(email: String, password: String, success: @escaping (User, Bool) -> Void) {
             Task {
                 do {

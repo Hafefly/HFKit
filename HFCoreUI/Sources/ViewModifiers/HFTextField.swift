@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct HFTextFieldStyle: TextFieldStyle {
     
-    @State var uiState: UiState<String>
+    var uiState: UiState<String>
     
     public init(_ uiState: UiState<String>) {
         self.uiState = uiState

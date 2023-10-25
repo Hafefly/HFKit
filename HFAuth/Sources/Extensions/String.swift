@@ -8,9 +8,9 @@
 import Foundation
 
 extension String {
-    func regexChecker(with regex: String) -> Bool {
+    func regexChecker(with regex: HFRegex) -> Bool {
         do {
-            let regex = try NSRegularExpression(pattern: regex)
+            let regex = try NSRegularExpression(pattern: regex.rawValue)
             let range = NSRange(location: 0, length: self.utf16.count)
             let matches = regex.matches(in: self, options: [], range: range)
             
