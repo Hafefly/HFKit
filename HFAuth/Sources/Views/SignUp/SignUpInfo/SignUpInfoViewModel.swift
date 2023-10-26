@@ -6,45 +6,10 @@
 //
 
 import Foundation
-import SwiftUI
 import Combine
 import FirebaseAuth
 import HFNavigation
 import HFCoreUI
-
-enum OTPButtonUiState: Equatable {
-    case disabled(Int)
-    case valid(Int)
-    case success
-    
-    var backgroundColor: Color {
-        switch self {
-        case .disabled:
-            return .gray
-        case .valid:
-            return .hfOrange
-        case .success:
-            return .green
-        }
-    }
-    
-    var text: String {
-        switch self {
-        case .disabled(let count), .valid(let count):
-            return count > 0 ? "resend otp" : "send otp"
-        case .success:
-            return "done"
-        }
-    }
-    
-    var disabled: Bool {
-        if case .valid = self {
-            return false
-        }
-        
-        return true
-    }
-}
 
 extension SignUpInfoView {
     class Model: ObservableObject {
@@ -53,7 +18,8 @@ extension SignUpInfoView {
         @Published public private(set) var lastnameUiState: UiState<String> = .idle
         @Published public private(set) var phoneNumberUiState: UiState<String> = .idle
         @Published public private(set) var otpButtonUiState: OTPButtonUiState = .disabled(0)
-        @Published public private(set) var otpFieldUiState: OTPFieldUiState = .hidden
+        
+        @Published public var otpFieldUiState: OTPFieldUiState = .hidden
         
         @Published public private(set) var otpButtonCount = 0
         

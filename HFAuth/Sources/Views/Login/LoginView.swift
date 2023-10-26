@@ -30,6 +30,7 @@ public struct LoginView: View {
                 .scaledToFit()
                 .padding(.horizontal, 32)
             Spacer()
+            Spacer()
             VStack(spacing: 16){
                 TextField("email", text: $email)
                     .placeholder(when: email.isEmpty) {
@@ -37,10 +38,12 @@ public struct LoginView: View {
                             .foregroundColor(.white.opacity(0.7))
                     }
                     .textFieldStyle(HFTextFieldStyle(model.emailUiState))
-                    .onChange(of: email, perform: model.checkEmail)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
                 SecureField("password", text: $password)
                     .textFieldStyle(HFTextFieldStyle(model.passwordUiState))
-                    .onChange(of: password, perform: model.checkPassword)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
                 HStack{
                     Button {
                         model.resetPassword(email: email)

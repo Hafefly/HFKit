@@ -81,6 +81,7 @@ struct SignUpInfoView: View {
                         Text(model.otpButtonUiState.text)
                             .font(.white, .regular, 16)
                     }
+                    .disabled(model.otpButtonUiState.disabled)
                     .frame(width: 100)
                     .buttonStyle(HFButtonStyle(disabled: model.otpButtonUiState.disabled))
                     .overlay(
@@ -90,7 +91,7 @@ struct SignUpInfoView: View {
                 }
             }
             
-            OTPFieldView(phonenumber, success: model.otpSuccess, fail: model.otpFail)
+            OTPFieldView(phonenumber, otpFieldUiState: $model.otpFieldUiState, success: model.otpSuccess, fail: model.otpFail)
             
             Spacer()
             Button {

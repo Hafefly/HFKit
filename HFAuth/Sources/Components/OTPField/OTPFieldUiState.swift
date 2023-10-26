@@ -10,6 +10,8 @@ import Foundation
 enum OTPFieldUiState: Equatable {
     case hidden
     case displayed
+    case loading
+    case success
     
     var opacity: Double {
         return self == .hidden ? 0 : 1

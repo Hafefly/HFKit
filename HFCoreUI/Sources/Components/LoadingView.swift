@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LoadingView: View {
+public struct LoadingView: View {
     
     private let gradient: AngularGradient
     private let animation: Animation
@@ -17,7 +17,7 @@ struct LoadingView: View {
     
     @State private var angle = 0.0
     
-    init(color: Color = .white, lineWidth: CGFloat = 2, trim: CGFloat = 0.75) {
+    public init(color: Color = .white, lineWidth: CGFloat = 2, trim: CGFloat = 0.75) {
         self.color = color
         self.lineWidth = lineWidth
         self.trim = trim
@@ -32,7 +32,7 @@ struct LoadingView: View {
             .repeatForever(autoreverses: false)
     }
     
-    var body: some View {
+    public var body: some View {
         Circle()
             .trim(from: 0.0, to: trim)
             .stroke(gradient, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
