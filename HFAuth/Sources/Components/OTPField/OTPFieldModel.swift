@@ -25,10 +25,10 @@ extension OTPFieldView {
             self.timer.connect().cancel()
         }
         
-        func verifyOtp(for phonenumber: String, success: @escaping () -> Void) {
+        func verifyOtp(for phonenumber: String, completion: @escaping (Int?, Error?) -> Void) {
             
             #warning("verify otp here")
-            success()
+            completion(200, nil)
         }
         
         func updateActiveField(value: [String], codeLength: Int, activeField: OTPField?, nextActiveField: @escaping (OTPField?) -> Void) {

@@ -91,7 +91,7 @@ struct SignUpInfoView: View {
                 }
             }
             
-            OTPFieldView(phonenumber, otpFieldUiState: $model.otpFieldUiState, success: model.otpSuccess, fail: model.otpFail)
+            OTPFieldView(phonenumber, otpFieldUiState: $model.otpFieldUiState, completion: model.otpFinished)
             
             Spacer()
             Button {

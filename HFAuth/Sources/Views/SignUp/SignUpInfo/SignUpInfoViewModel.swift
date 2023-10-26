@@ -34,13 +34,14 @@ extension SignUpInfoView {
             return true
         }
         
-        func otpFail() {
+        func otpFinished(_ code: Int?,_ error: Error?) {
             self.setOtpFieldUiState(.hidden)
-            self.setOtpButtonUiState(.valid(otpButtonCount))
-        }
-        
-        func otpSuccess() {
-            self.setOtpFieldUiState(.hidden)
+            
+            guard nil == error else {
+                self.setOtpButtonUiState(.valid(otpButtonCount))
+                return
+            }
+            
             self.setOtpButtonUiState(.success)
         }
         

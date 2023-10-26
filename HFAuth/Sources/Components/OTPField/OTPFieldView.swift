@@ -16,8 +16,7 @@ struct OTPFieldView: View {
     
     @Binding public var otpFieldUiState: OTPFieldUiState
     
-    private let success: () -> Void
-    private let fail: () -> Void
+    private let completion: (Int?, Error?) -> Void
     
     @FocusState private var activeField: OTPField?
     
@@ -25,11 +24,10 @@ struct OTPFieldView: View {
         return model.otpFields.joined()
     }
     
-    init(_ phoneNumber: String, otpFieldUiState: Binding<OTPFieldUiState>, success: @escaping () -> Void, fail: @escaping () -> Void) {
+    init(_ phoneNumber: String, otpFieldUiState: Binding<OTPFieldUiState>, completion: @escaping (Int?, Error?) -> Void) {
         self.phoneNumber = phoneNumber
         self._otpFieldUiState = otpFieldUiState
-        self.success = success
-        self.fail = fail
+        self.completion = completion
     }
     
     var body: some View {
@@ -78,7 +76,7 @@ struct OTPFieldView: View {
             .onChange(of: model.otpFields) { newValue in
                 if model.handleAutoFill(value: newValue, codeLength: 6) {
                     activeField = nil
-                    model.verifyOtp(for: phoneNumber, success: success)
+                    model.verifyOtp(for: phoneNumber, completion: completion)
                 } else {
                     model.updateActiveField(value: newValue, codeLength: 6, activeField: activeField) { newActiveField in
                         activeField = newActiveField
@@ -88,7 +86,7 @@ struct OTPFieldView: View {
                             if item.count == 0 { return }
                         }
                         activeField = nil
-                        model.verifyOtp(for: phoneNumber, success: success)
+                        model.verifyOtp(for: phoneNumber, completion: completion)
                     }
                 }
             }
